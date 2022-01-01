@@ -4,7 +4,7 @@ let tasksToDoEl = document.querySelector('#tasks-to-do');
 
 // Functions
 // Add a task to the list
-let handleCreateTask = function (event) {
+let taskFormHandler = function (event) {
   // Stop the form from submitting and refreshing the page
   event.preventDefault();
 
@@ -12,6 +12,17 @@ let handleCreateTask = function (event) {
   let taskNameInput = document.querySelector("input[name='task-name']").value;
   let taskTypeInput = document.querySelector("select[name='task-type']").value;
 
+  // Package data as an object
+  let taskDataObject = {
+    name: taskNameInput,
+    type: taskTypeInput,
+  };
+
+  // Send it to createTaskEl
+  createTaskEl(taskDataObject);
+};
+
+let createTaskEl = function (taskDataObject) {
   // Create the list item
   let listItemEl = document.createElement('li');
   listItemEl.className = 'task-item';
@@ -22,8 +33,8 @@ let handleCreateTask = function (event) {
 
   // Add HTML content to div
   taskInfoEl.innerHTML = `
-  <h3 class='task-name'>${taskNameInput}</h3>
-  <span class='task-type'>${taskTypeInput}</span>`;
+  <h3 class='task-name'>${taskDataObject.name}</h3>
+  <span class='task-type'>${taskDataObject.type}</span>`;
 
   listItemEl.appendChild(taskInfoEl);
 
@@ -33,4 +44,4 @@ let handleCreateTask = function (event) {
 
 // Event Listeners
 // When 'Add Task' button is clicked, run create task function
-formEl.addEventListener('submit', handleCreateTask);
+formEl.addEventListener('submit', taskFormHandler);
