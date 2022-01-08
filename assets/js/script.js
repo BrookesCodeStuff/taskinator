@@ -1,4 +1,6 @@
+//------------------------
 // Variables
+//------------------------
 let taskIdCounter = 0;
 let tasks = [];
 let formEl = document.querySelector('#task-form');
@@ -7,7 +9,10 @@ let tasksToDoEl = document.querySelector('#tasks-to-do');
 let tasksInProgressEl = document.querySelector('#tasks-in-progress');
 let tasksCompletedEl = document.querySelector('#tasks-completed');
 
+//------------------------
 // Functions
+//------------------------
+
 // Add a task to the list
 let taskFormHandler = function (event) {
   // Stop the form from submitting and refreshing the page
@@ -72,6 +77,9 @@ let createTaskEl = function (taskDataObject) {
   taskDataObject.id = taskIdCounter;
   tasks.push(taskDataObject);
 
+  // Save updated task array to localStorage
+  saveTasks();
+
   // Increase task counter for next unique ID
   taskIdCounter++;
 };
@@ -120,6 +128,7 @@ let createTaskActions = function (taskId) {
   return actionContainerEl;
 };
 
+// EDIT / DELETE BUTTON CLICK HANDLER
 let taskButtonHandler = function (event) {
   // Get the event's target element
   let targetEl = event.target;
@@ -173,11 +182,15 @@ let completeEditTask = function (taskName, taskType, taskId) {
     }
   }
 
+  // Save updated task array to localStorage
+  saveTasks();
+
   // Reset the form
   formEl.removeAttribute('data-task-id');
   document.querySelector('#save-task').textContent = 'Add Task';
 };
 
+// DELETE TASK FUNCTION
 let deleteTask = function (taskId) {
   let taskSelected = document.querySelector(
     ".task-item[data-task-id='" + taskId + "']"
@@ -197,6 +210,9 @@ let deleteTask = function (taskId) {
 
   // Reassign tasks array to be the same as updatedTaskArr
   tasks = updatedTaskArr;
+
+  // Save updated task array to localStorage
+  saveTasks();
 };
 
 let taskStatusChangeHandler = function (event) {
@@ -218,9 +234,19 @@ let taskStatusChangeHandler = function (event) {
   } else if (statusValue === 'completed') {
     tasksCompletedEl.appendChild(taskSelected);
   }
+
+  // Save updated task array to localStorage
+  saveTasks();
 };
 
+let saveTasks = function () {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+};
+
+//------------------------
 // Event Listeners
+//------------------------
+
 // When 'Add Task' button is clicked, run create task function
 formEl.addEventListener('submit', taskFormHandler);
 pageContentEl.addEventListener('click', taskButtonHandler);
